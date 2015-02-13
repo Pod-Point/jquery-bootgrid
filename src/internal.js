@@ -483,9 +483,9 @@ function renderPaginationItem(list, uri, text, markerCss)
                 {
                     var commandList = {
                         first: 1,
-                        prev: parseInt(that.current) - 1,
-                        next: parseInt(that.current) + 1,
-                        last: parseInt(that.totalPages)
+                        prev: that.current - 1,
+                        next: that.current + 1,
+                        last: that.totalPages
                     };
                     var command = $this.attr("href").substr(1);
                     that.current = commandList[command] || +command; // + converts string to int
