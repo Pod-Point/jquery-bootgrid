@@ -55,7 +55,7 @@ function getRequest()
             searchPhrase: this.searchPhrase
         },
         post = this.options.post;
-    
+
     post = ($.isFunction(post)) ? post() : post;
     return this.options.requestHandler($.extend(true, request, post));
 }
@@ -1043,7 +1043,7 @@ Grid.defaults = {
     navigation: 3, // it's a flag: 0 = none, 1 = top, 2 = bottom, 3 = both (top and bottom)
     padding: 2, // page padding (pagination)
     columnSelection: true,
-    rowCount: [10, 25, 50, -1], // rows per page int or array of int (-1 represents "All")
+    rowCount: [15, 30, 60, -1], // rows per page int or array of int (-1 represents "All")
 
     /**
      * Enables row selection (to enable multi selection see also `multiSelect`). Default value is `false`.
@@ -1095,7 +1095,7 @@ Grid.defaults = {
     multiSort: false,
     ajax: false, // todo: find a better name for this property to differentiate between client-side and server-side data
     method: "GET",  //todo: user control over url- /rest/like/paths instead of query string for instance.
-                    //      'url' and 'request' passed together to requestHandler perhaps. 
+                    //      'url' and 'request' passed together to requestHandler perhaps.
 
     /**
      * Enriches the request object with additional properties. Either a `PlainObject` or a `Function`

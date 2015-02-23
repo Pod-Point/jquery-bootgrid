@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81e37025-aa41-4217-a1a8-9eac5b07dd56" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jquery-bootgrid.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dist/jquery.bootgrid.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dist/jquery.bootgrid.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/internal.js" afterPath="$PROJECT_DIR$/src/internal.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/public.js" afterPath="$PROJECT_DIR$/src/public.js" />
     </list>
     <ignored path="jquery-bootgrid.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,52 +28,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="internal.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/internal.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3800813" vertical-offset="351" max-vertical-offset="3675">
-              <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="n#!!block;n#appendRow#0" expanded="false" />
-                <element signature="n#!!block;n#getParams#0" expanded="false" />
-                <element signature="n#!!block;n#getCssSelector#0" expanded="false" />
-                <element signature="n#!!block;n#getUrl#0" expanded="false" />
-                <element signature="n#!!block;n#highlightAppendedRows#0" expanded="false" />
-                <element signature="n#!!block;n#isVisible#0" expanded="false" />
-                <element signature="n#!!block;n#loadColumns#0" expanded="false" />
-                <element signature="e#3941#4065#0" expanded="false" />
-                <element signature="n#!!block;n#loadData#0" expanded="false" />
-                <element signature="n#!!block;n#loadRows#0" expanded="false" />
-                <element signature="n#!!block;n#prepareTable#0" expanded="false" />
-                <element signature="n#!!block;n#renderActions#0" expanded="false" />
-                <element signature="n#!!block;n#renderColumnSelection#0" expanded="false" />
-                <element signature="n#!!block;n#renderInfos#0" expanded="false" />
-                <element signature="n#!!block;n#renderNoResultsRow#0" expanded="false" />
-                <element signature="n#!!block;n#renderPagination#0" expanded="false" />
-                <element signature="n#!!block;n#pushHistoryState#0" expanded="false" />
-                <element signature="n#!!block;n#generateUri#0" expanded="false" />
-                <element signature="n#!!block;n#getParameterByName#0" expanded="false" />
-                <element signature="n#!!block;n#getPageNumber#0" expanded="false" />
-                <element signature="n#!!block;n#renderPaginationItem#0" expanded="false" />
-                <element signature="n#!!block;n#renderRowCountSelection#0" expanded="false" />
-                <element signature="n#!!block;n#renderRows#0" expanded="false" />
-                <element signature="n#!!block;n#registerRowEvents#0" expanded="false" />
-                <element signature="n#!!block;n#renderSearchField#0" expanded="false" />
-                <element signature="n#!!block;n#renderTableHeader#0" expanded="false" />
-                <element signature="n#!!block;n#setTableHeaderSortDirection#0" expanded="false" />
-                <element signature="n#!!block;n#replacePlaceHolder#0" expanded="false" />
-                <element signature="n#!!block;n#showLoading#0" expanded="false" />
-                <element signature="n#!!block;n#sortRows#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="plugin.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/plugin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="1250">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1250">
               <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="13" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -88,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="public.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="public.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/public.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="15825">
-              <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.6351626" vertical-offset="950" max-vertical-offset="15825">
+              <caret line="63" column="25" selection-start-line="63" selection-start-column="25" selection-end-line="63" selection-end-column="25" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -109,6 +61,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/internal.js" />
+        <option value="$PROJECT_DIR$/src/public.js" />
       </list>
     </option>
   </component>
@@ -400,32 +353,12 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/public.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="15825">
-          <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Gruntfile.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6050">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/plugin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1250">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="13" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -449,7 +382,7 @@
     <entry file="file://$PROJECT_DIR$/src/internal.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3800813" vertical-offset="351" max-vertical-offset="3675">
-          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="n#!!block;n#appendRow#0" expanded="false" />
@@ -459,7 +392,7 @@
             <element signature="n#!!block;n#highlightAppendedRows#0" expanded="false" />
             <element signature="n#!!block;n#isVisible#0" expanded="false" />
             <element signature="n#!!block;n#loadColumns#0" expanded="false" />
-            <element signature="e#3941#4065#0" expanded="false" />
+            <element signature="e#3937#4061#0" expanded="false" />
             <element signature="n#!!block;n#loadData#0" expanded="false" />
             <element signature="n#!!block;n#loadRows#0" expanded="false" />
             <element signature="n#!!block;n#prepareTable#0" expanded="false" />
@@ -482,6 +415,26 @@
             <element signature="n#!!block;n#replacePlaceHolder#0" expanded="false" />
             <element signature="n#!!block;n#showLoading#0" expanded="false" />
             <element signature="n#!!block;n#sortRows#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/plugin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1250">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="13" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/public.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6351626" vertical-offset="950" max-vertical-offset="15825">
+          <caret line="63" column="25" selection-start-line="63" selection-start-column="25" selection-end-line="63" selection-end-column="25" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
