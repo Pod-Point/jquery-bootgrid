@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 02/18/2015
+ * jQuery Bootgrid v1.1.4 - 02/23/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -42,14 +42,20 @@ function getParams(context)
 
 function getRequest()
 {
+    var current = getParameterByName('page');
+
+    if (current !== '' && this.current !== current) {
+        this.current = current;
+    }
+
     var request = {
-            current: this.current,
+            current: parseInt(this.current),
             rowCount: this.rowCount,
             sort: this.sortDictionary,
             searchPhrase: this.searchPhrase
         },
         post = this.options.post;
-
+    
     post = ($.isFunction(post)) ? post() : post;
     return this.options.requestHandler($.extend(true, request, post));
 }
@@ -77,6 +83,15 @@ function init()
     renderSearchField.call(this);
     renderActions.call(this);
     loadData.call(this);
+
+    var that = this;
+    window.addEventListener('popstate', function() {
+        that.current = getParameterByName('page');
+        if(isNaN(parseInt(that.current))) {
+            that.current = 1;
+        }
+        loadData.call(that);
+    });
 
     this.element.trigger("initialized" + namespace);
 }
@@ -447,9 +462,15 @@ function renderPagination()
                 maxCount = this.options.padding * 2 + 1,
                 count = (totalPages >= maxCount) ? maxCount : totalPages;
 
-            renderPaginationItem.call(this, pagination, "first", "&laquo;", "first")
+            renderPaginationItem.call(this, pagination, 1, "&laquo;", "first")
                 ._bgEnableAria(current > 1);
-            renderPaginationItem.call(this, pagination, "prev", "&lt;", "prev")
+
+            var prev = current - 1;
+            if (current <= 0) {
+                prev = 1;
+            }
+
+            renderPaginationItem.call(this, pagination, prev, "&lt;", "prev")
                 ._bgEnableAria(current > 1);
 
             for (var i = 0; i < count; i++)
@@ -465,9 +486,14 @@ function renderPagination()
                     ._bgEnableAria(false)._bgSelectAria();
             }
 
-            renderPaginationItem.call(this, pagination, "next", "&gt;", "next")
+            var next = current + 1;
+            if (current >= totalPages) {
+                next = totalPages;
+            }
+
+            renderPaginationItem.call(this, pagination, next, "&gt;", "next")
                 ._bgEnableAria(totalPages > current);
-            renderPaginationItem.call(this, pagination, "last", "&raquo;", "last")
+            renderPaginationItem.call(this, pagination, totalPages, "&raquo;", "last")
                 ._bgEnableAria(totalPages > current);
 
             replacePlaceHolder.call(this, headerPagination, pagination, 1);
@@ -476,16 +502,52 @@ function renderPagination()
     }
 }
 
+function pushHistoryState(e, uri)
+{
+    if (typeof history !== 'undefined') {
+        history.pushState({pageNumber: getPageNumber(uri)}, null, uri);
+        return e.preventDefault();
+    } else {
+        return e.stopPropagation();
+    }
+}
+
+function generateUri(uri)
+{
+    if (typeof history !== 'undefined') {
+        return "?page=" + uri;
+    } else {
+        return "#" + uri;
+    }
+}
+
+function getParameterByName(name)
+{
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function getPageNumber(fragment)
+{
+    if (typeof history !== 'undefined') {
+        return parseInt(fragment.replace("?page=", ""));
+    } else {
+        return parseInt(fragment.substr(1));
+    }
+}
+
 function renderPaginationItem(list, uri, text, markerCss)
 {
     var that = this,
         tpl = this.options.templates,
         css = this.options.css,
-        values = getParams.call(this, { css: markerCss, text: text, uri: "#" + uri }),
+        values = getParams.call(this, { css: markerCss, text: text, uri: generateUri(uri) }),
         item = $(tpl.paginationItem.resolve(values))
             .on("click" + namespace, getCssSelector(css.paginationButton), function (e)
             {
-                e.stopPropagation();
+                pushHistoryState(e, values.ctx.uri);
 
                 var $this = $(this),
                     parent = $this.parent();
@@ -497,7 +559,7 @@ function renderPaginationItem(list, uri, text, markerCss)
                         next: that.current + 1,
                         last: that.totalPages
                     };
-                    var command = $this.attr("href").substr(1);
+                    var command = getPageNumber($this.attr("href"));
                     that.current = commandList[command] || +command; // + converts string to int
                     loadData.call(that);
                 }
