@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 02/23/2015
+ * jQuery Bootgrid v1.1.4 - 04/01/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -42,12 +42,6 @@ function getParams(context)
 
 function getRequest()
 {
-    var current = getParameterByName('page');
-
-    if (current !== '' && this.current !== current) {
-        this.current = current;
-    }
-
     var request = {
             current: parseInt(this.current),
             rowCount: this.rowCount,
@@ -76,6 +70,7 @@ function init()
     this.element.trigger("initialize" + namespace);
 
     loadColumns.call(this); // Loads columns from HTML thead tag
+    loadStateFromUrl.call(this);
     this.selection = this.options.selection && this.identifier != null;
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
@@ -83,17 +78,40 @@ function init()
     renderSearchField.call(this);
     renderActions.call(this);
     loadData.call(this);
+    replaceHistoryState.call(this);
 
-    var that = this;
-    window.addEventListener('popstate', function() {
-        that.current = getParameterByName('page');
-        if(isNaN(parseInt(that.current))) {
-            that.current = 1;
-        }
-        loadData.call(that);
+    var bootgrid = this;
+
+    window.addEventListener('popstate', function(that)
+    {
+        bootgrid.current = that.state.current;
+        bootgrid.sortDictionary = that.state.sortDictionary;
+
+        renderTableHeader.call(bootgrid);
+        sortRows.call(bootgrid);
+        loadData.call(bootgrid);
     });
 
     this.element.trigger("initialized" + namespace);
+}
+
+function loadStateFromUrl()
+{
+    var getVars = getUrlVars();
+
+    if (typeof(getVars.page) !== 'undefined') {
+        this.current = getVars.page;
+    }
+
+    if (typeof(getVars.column) !== 'undefined' && typeof(getVars.direction) !== 'undefined') {
+        this.sortDictionary[getVars.column] = getVars.direction;
+    }
+
+    if (typeof(getVars.search) !== 'undefined') {
+        this.searchPhrase = getVars.search;
+    }
+
+    console.log(this);
 }
 
 function highlightAppendedRows(rows)
@@ -502,52 +520,79 @@ function renderPagination()
     }
 }
 
-function pushHistoryState(e, uri)
+function pushHistoryState()
 {
-    if (typeof history !== 'undefined') {
-        history.pushState({pageNumber: getPageNumber(uri)}, null, uri);
-        return e.preventDefault();
-    } else {
-        return e.stopPropagation();
+    if (historyApiIsAvailable()) {
+        history.pushState({
+            current: this.current,
+            sortDictionary: this.sortDictionary,
+            searchPhrase: this.searchPhrase
+        }, null, generateUri.call(this));
     }
 }
 
-function generateUri(uri)
+function replaceHistoryState()
 {
-    if (typeof history !== 'undefined') {
-        return "?page=" + uri;
-    } else {
-        return "#" + uri;
+    if (historyApiIsAvailable()) {
+        history.replaceState({
+            current: this.current,
+            sortDictionary: this.sortDictionary
+        }, null, generateUri.call(this));
     }
 }
 
-function getParameterByName(name)
+function generateUri(pageNumber)
 {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+    var queryItems = [];
 
-function getPageNumber(fragment)
-{
-    if (typeof history !== 'undefined') {
-        return parseInt(fragment.replace("?page=", ""));
-    } else {
-        return parseInt(fragment.substr(1));
+    if (typeof(pageNumber) === 'undefined') {
+        queryItems.push('page=' + this.current);
+    } else if (pageNumber > 0) {
+        queryItems.push('page=' + pageNumber);
     }
+
+    jQuery.each(this.sortDictionary, function(column, direction) {
+        queryItems.push('column=' + column);
+        queryItems.push('direction=' + direction);
+    });
+
+    if (this.searchPhrase !== '') {
+        queryItems.push('search=' + this.searchPhrase);
+    }
+
+    return (queryItems.length > 0)? (historyApiIsAvailable()? '?' : '#') + queryItems.join('&') : '';
 }
 
-function renderPaginationItem(list, uri, text, markerCss)
+function historyApiIsAvailable()
+{
+    return !!(window.history && history.pushState);
+}
+
+function getUrlVars()
+{
+    var vars = {};
+
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+
+    return vars;
+}
+
+function renderPaginationItem(list, pageNumber, text, markerCss)
 {
     var that = this,
         tpl = this.options.templates,
         css = this.options.css,
-        values = getParams.call(this, { css: markerCss, text: text, uri: generateUri(uri) }),
+        values = getParams.call(this, { css: markerCss, text: text, uri: generateUri.call(this, pageNumber), page: pageNumber }),
         item = $(tpl.paginationItem.resolve(values))
             .on("click" + namespace, getCssSelector(css.paginationButton), function (e)
             {
-                pushHistoryState(e, values.ctx.uri);
+                if (historyApiIsAvailable()) {
+                    e.preventDefault();
+                } else {
+                    e.stopPropagation();
+                }
 
                 var $this = $(this),
                     parent = $this.parent();
@@ -559,9 +604,10 @@ function renderPaginationItem(list, uri, text, markerCss)
                         next: that.current + 1,
                         last: that.totalPages
                     };
-                    var command = getPageNumber($this.attr("href"));
+                    var command = $this.data('page');
                     that.current = commandList[command] || +command; // + converts string to int
                     loadData.call(that);
+                    pushHistoryState.call(that);
                 }
                 $this.trigger("blur");
             });
@@ -761,9 +807,9 @@ function renderSearchField()
                 timer = null, // fast keyup detection
                 currentValue = "",
                 searchFieldSelector = getCssSelector(css.searchField),
-                search = $(tpl.search.resolve(getParams.call(this))),
+                search = $(tpl.search.resolve(getParams.call(this, { searchPhrase: this.searchPhrase }))),
                 searchField = (search.is(searchFieldSelector)) ? search :
-                    search.find(searchFieldSelector);
+                search.find(searchFieldSelector);
 
             searchField.on("keyup" + namespace, function (e)
             {
@@ -799,7 +845,7 @@ function renderTableHeader()
     {
         var selectBox = (this.options.multiSelect) ?
             tpl.select.resolve(getParams.call(that, { type: "checkbox", value: "all" })) : "";
-        html += tpl.rawHeaderCell.resolve(getParams.call(that, { content: selectBox,
+            html += tpl.rawHeaderCell.resolve(getParams.call(that, { content: selectBox,
             css: css.selectCell }));
     }
 
@@ -829,11 +875,16 @@ function renderTableHeader()
         headerRow.off("click" + namespace, sortingSelector)
             .on("click" + namespace, sortingSelector, function (e)
             {
-                e.preventDefault();
+                if (historyApiIsAvailable()) {
+                    e.preventDefault();
+                } else {
+                    e.stopPropagation();
+                }
 
                 setTableHeaderSortDirection.call(this, that);
                 sortRows.call(that);
                 loadData.call(that);
+                pushHistoryState.call(that);
             });
     }
 
@@ -1043,7 +1094,7 @@ Grid.defaults = {
     navigation: 3, // it's a flag: 0 = none, 1 = top, 2 = bottom, 3 = both (top and bottom)
     padding: 2, // page padding (pagination)
     columnSelection: true,
-    rowCount: [15, 30, 60, -1], // rows per page int or array of int (-1 represents "All")
+    rowCount: [10, 25, 50, 100], // rows per page int or array of int (-1 represents "All")
 
     /**
      * Enables row selection (to enable multi selection see also `multiSelect`). Default value is `false`.
@@ -1286,10 +1337,10 @@ Grid.defaults = {
         loading: "<tr><td colspan=\"{{ctx.columns}}\" class=\"loading\">{{lbl.loading}}</td></tr>",
         noResults: "<tr><td colspan=\"{{ctx.columns}}\" class=\"no-results\">{{lbl.noResults}}</td></tr>",
         pagination: "<ul class=\"{{css.pagination}}\"></ul>",
-        paginationItem: "<li class=\"{{ctx.css}}\"><a href=\"{{ctx.uri}}\" class=\"{{css.paginationButton}}\">{{ctx.text}}</a></li>",
+        paginationItem: "<li class=\"{{ctx.css}}\"><a href=\"{{ctx.uri}}\" data-page=\"{{ctx.page}}\" class=\"{{css.paginationButton}}\">{{ctx.text}}</a></li>",
         rawHeaderCell: "<th class=\"{{ctx.css}}\">{{ctx.content}}</th>", // Used for the multi select box
         row: "<tr{{ctx.attr}}>{{ctx.cells}}</tr>",
-        search: "<div class=\"{{css.search}}\"><div class=\"input-group\"><span class=\"{{css.icon}} input-group-addon glyphicon-search\"></span> <input type=\"text\" class=\"{{css.searchField}}\" placeholder=\"{{lbl.search}}\" /></div></div>",
+        search: "<div class=\"{{css.search}}\"><div class=\"input-group\"><span class=\"{{css.icon}} input-group-addon glyphicon-search\"></span> <input type=\"text\" value=\"{{ctx.searchPhrase}}\" class=\"{{css.searchField}}\" placeholder=\"{{lbl.search}}\" /></div></div>",
         select: "<input name=\"select\" type=\"{{ctx.type}}\" class=\"{{css.selectBox}}\" value=\"{{ctx.value}}\" {{ctx.checked}} />"
     }
 };
@@ -1448,6 +1499,7 @@ Grid.prototype.search = function(phrase)
     {
         this.current = 1;
         this.searchPhrase = phrase;
+        pushHistoryState.call(this);
         loadData.call(this);
     }
 
