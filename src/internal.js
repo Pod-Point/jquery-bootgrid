@@ -100,8 +100,6 @@ function loadStateFromUrl()
     if (typeof(getVars.search) !== 'undefined') {
         this.searchPhrase = getVars.search;
     }
-
-    console.log(this);
 }
 
 function highlightAppendedRows(rows)
