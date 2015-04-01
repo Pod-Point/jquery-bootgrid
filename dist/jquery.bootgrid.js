@@ -105,6 +105,7 @@ function loadStateFromUrl()
     }
 
     if (typeof(getVars.column) !== 'undefined' && typeof(getVars.direction) !== 'undefined') {
+        this.sortDictionary = null;
         this.sortDictionary[getVars.column] = getVars.direction;
     }
 
