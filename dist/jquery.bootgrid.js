@@ -71,6 +71,7 @@ function init()
 
     loadColumns.call(this); // Loads columns from HTML thead tag
     loadStateFromUrl.call(this);
+    loadStateFromLocalStorage.call(this);
     this.selection = this.options.selection && this.identifier != null;
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
@@ -109,6 +110,18 @@ function loadStateFromUrl()
 
     if (typeof(getVars.search) !== 'undefined') {
         this.searchPhrase = getVars.search;
+    }
+}
+
+function loadStateFromLocalStorage()
+{
+    if (localStorageApiIsAvailable()) {
+        var rowCount = parseInt(localStorage.getItem('rowCount' + namespace));
+        if (rowCount !== null && Grid.defaults.rowCount.indexOf(rowCount) !== -1) {
+            this.rowCount = rowCount;
+        } else if (Grid.defaults.rowCount.indexOf(rowCount) === -1) {
+            localStorage.removeItem('rowCount' + namespace);
+        }
     }
 }
 
@@ -566,6 +579,11 @@ function historyApiIsAvailable()
     return !!(window.history && history.pushState);
 }
 
+function localStorageApiIsAvailable()
+{
+    return (typeof(Storage) !== 'undefined');
+}
+
 function getUrlVars()
 {
     var vars = {};
@@ -647,7 +665,10 @@ function renderRowCountSelection(actions)
                             newRowCount = +$this.attr("href").substr(1);
                         if (newRowCount !== that.rowCount)
                         {
-                            // todo: sophisticated solution needed for calculating which page is selected
+                            if (localStorageApiIsAvailable()) {
+                                localStorage.setItem('rowCount' + namespace, newRowCount);
+                            }
+
                             that.current = 1; // that.rowCount === -1 ---> All
                             that.rowCount = newRowCount;
                             $this.parents(menuItemsSelector).children().each(function ()
