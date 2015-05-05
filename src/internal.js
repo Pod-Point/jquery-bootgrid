@@ -355,6 +355,37 @@ function renderActions()
                 tpl = this.options.templates,
                 actions = $(tpl.actions.resolve(getParams.call(this)));
 
+            // Download Button (only works if browser has HTML 5 download attr available and download option set)
+            if (this.options.ajax && this.options.download && (!window.externalHost && 'download' in document.createElement('a')))
+            {
+                var downloadIcon = tpl.icon.resolve(getParams.call(this, { iconCss: css.iconDownload })),
+                    download = $(tpl.actionButton.resolve(getParams.call(this,
+                        { content: downloadIcon, text: this.options.labels.download })))
+                        .on("click" + namespace, function (e)
+                        {
+                            e.stopPropagation();
+                            var $this = $(this);
+                            $this.attr('disabled','disabled');
+
+                            $.get(that.options.url, function(data) {
+                                var csv = buildCsvString(data.rows);
+
+                                var a      = document.createElement('a');
+                                a.href     = 'data:attachment/csv,' + csv;
+                                a.target   = '_blank';
+                                a.download = that.options.download;
+
+                                document.body.appendChild(a);
+                                a.click();
+                            }).always(function() {
+                                $this.removeAttr('disabled');
+                            }).fail(function() {
+                                window.alert('Something went wrong while trying to download this data grid.');
+                            });
+                        });
+                actions.append(download);
+            }
+
             // Refresh Button
             if (this.options.ajax)
             {
@@ -381,6 +412,35 @@ function renderActions()
             replacePlaceHolder.call(this, footerActions, actions, 2);
         }
     }
+}
+
+function buildCsvString(data)
+{
+    var csvHeadings = [];
+    var csvRows = [];
+    var csvString;
+
+    // Grab the column headings
+    $.each(data[0], function (key) {
+        csvHeadings.push(key);
+    });
+
+    csvRows.push(csvHeadings.join(','));
+
+    // Grab the data
+    $.each(data, function (key, row) {
+        var csvRow = [];
+
+        $.each(row, function (key, data) {
+            csvRow.push(data);
+        });
+
+        csvRows.push(csvRow.join(','));
+    });
+
+    csvString = csvRows.join("%0A");
+
+    return csvString;
 }
 
 function renderColumnSelection(actions)

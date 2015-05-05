@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 04/01/2015
+ * jQuery Bootgrid v1.1.4 - 05/05/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -365,6 +365,37 @@ function renderActions()
                 tpl = this.options.templates,
                 actions = $(tpl.actions.resolve(getParams.call(this)));
 
+            // Download Button (only works if browser has HTML 5 download attr available and download option set)
+            if (this.options.ajax && this.options.download && (!window.externalHost && 'download' in document.createElement('a')))
+            {
+                var downloadIcon = tpl.icon.resolve(getParams.call(this, { iconCss: css.iconDownload })),
+                    download = $(tpl.actionButton.resolve(getParams.call(this,
+                        { content: downloadIcon, text: this.options.labels.download })))
+                        .on("click" + namespace, function (e)
+                        {
+                            e.stopPropagation();
+                            var $this = $(this);
+                            $this.attr('disabled','disabled');
+
+                            $.get(that.options.url, function(data) {
+                                var csv = buildCsvString(data.rows);
+
+                                var a      = document.createElement('a');
+                                a.href     = 'data:attachment/csv,' + csv;
+                                a.target   = '_blank';
+                                a.download = that.options.download;
+
+                                document.body.appendChild(a);
+                                a.click();
+                            }).always(function() {
+                                $this.removeAttr('disabled');
+                            }).fail(function() {
+                                window.alert('Something went wrong while trying to download this data grid.');
+                            });
+                        });
+                actions.append(download);
+            }
+
             // Refresh Button
             if (this.options.ajax)
             {
@@ -391,6 +422,35 @@ function renderActions()
             replacePlaceHolder.call(this, footerActions, actions, 2);
         }
     }
+}
+
+function buildCsvString(data)
+{
+    var csvHeadings = [];
+    var csvRows = [];
+    var csvString;
+
+    // Grab the column headings
+    $.each(data[0], function (key) {
+        csvHeadings.push(key);
+    });
+
+    csvRows.push(csvHeadings.join(','));
+
+    // Grab the data
+    $.each(data, function (key, row) {
+        var csvRow = [];
+
+        $.each(row, function (key, data) {
+            csvRow.push(data);
+        });
+
+        csvRows.push(csvRow.join(','));
+    });
+
+    csvString = csvRows.join("%0A");
+
+    return csvString;
 }
 
 function renderColumnSelection(actions)
@@ -1114,7 +1174,8 @@ Grid.defaults = {
     navigation: 3, // it's a flag: 0 = none, 1 = top, 2 = bottom, 3 = both (top and bottom)
     padding: 2, // page padding (pagination)
     columnSelection: true,
-    rowCount: [10, 25, 50, 100], // rows per page int or array of int (-1 represents "All")
+    download: false,
+    rowCount: [10, 15, 25, 35, 100], // rows per page int or array of int (-1 represents "All")
 
     /**
      * Enables row selection (to enable multi selection see also `multiSelect`). Default value is `false`.
@@ -1271,6 +1332,7 @@ Grid.defaults = {
         iconDown: "glyphicon-chevron-down",
         iconRefresh: "glyphicon-refresh",
         iconUp: "glyphicon-chevron-up",
+        iconDownload: "glyphicon-download-alt",
         infos: "infos", // must be a unique class name or constellation of class names within the header and footer,
         left: "text-left",
         pagination: "pagination", // must be a unique class name or constellation of class names within the header and footer

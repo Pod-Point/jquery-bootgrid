@@ -61,7 +61,8 @@ Grid.defaults = {
     navigation: 3, // it's a flag: 0 = none, 1 = top, 2 = bottom, 3 = both (top and bottom)
     padding: 2, // page padding (pagination)
     columnSelection: true,
-    rowCount: [10, 25, 50, 100], // rows per page int or array of int (-1 represents "All")
+    download: false,
+    rowCount: [10, 15, 25, 35, 100], // rows per page int or array of int (-1 represents "All")
 
     /**
      * Enables row selection (to enable multi selection see also `multiSelect`). Default value is `false`.
@@ -218,6 +219,7 @@ Grid.defaults = {
         iconDown: "glyphicon-chevron-down",
         iconRefresh: "glyphicon-refresh",
         iconUp: "glyphicon-chevron-up",
+        iconDownload: "glyphicon-download-alt",
         infos: "infos", // must be a unique class name or constellation of class names within the header and footer,
         left: "text-left",
         pagination: "pagination", // must be a unique class name or constellation of class names within the header and footer
