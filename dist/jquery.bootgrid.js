@@ -365,8 +365,6 @@ function renderActions()
                 tpl = this.options.templates,
                 actions = $(tpl.actions.resolve(getParams.call(this)));
 
-            console.log(that.currentRows);
-
             // Download Button (only works if browser has HTML 5 download attr available and download option set)
             if (this.options.ajax && this.options.download && (!window.externalHost && 'download' in document.createElement('a')))
             {
