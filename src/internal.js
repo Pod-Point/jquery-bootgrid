@@ -100,7 +100,7 @@ function loadStateFromUrl()
     }
 
     if (typeof(getVars.search) !== 'undefined') {
-        this.searchPhrase = getVars.search;
+        this.searchPhrase = window.decodeURI(getVars.search);
     }
 }
 
