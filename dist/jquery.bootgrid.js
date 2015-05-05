@@ -374,6 +374,7 @@ function renderActions()
                         .on("click" + namespace, function (e)
                         {
                             e.stopPropagation();
+
                             var $this = $(this);
                             $this.attr('disabled','disabled');
 
@@ -393,6 +394,11 @@ function renderActions()
                                 window.alert('Something went wrong while trying to download this data grid.');
                             });
                         });
+
+                if (this.total === 0) {
+                    download.attr('disabled','disabled');
+                }
+
                 actions.append(download);
             }
 
@@ -430,27 +436,31 @@ function buildCsvString(data)
     var csvRows = [];
     var csvString;
 
-    // Grab the column headings
-    $.each(data[0], function (key) {
-        csvHeadings.push(window.encodeURI(key));
-    });
-
-    csvRows.push(csvHeadings.join(','));
-
-    // Grab the data
-    $.each(data, function (key, row) {
-        var csvRow = [];
-
-        $.each(row, function (key, data) {
-            csvRow.push(window.encodeURI(data));
+    if (data.length > 0) {
+        // Grab the column headings
+        $.each(data[0], function (key) {
+            csvHeadings.push(window.encodeURI(key));
         });
 
-        csvRows.push(csvRow.join(','));
-    });
+        csvRows.push(csvHeadings.join(','));
 
-    csvString = csvRows.join("%0A");
+        // Grab the data
+        $.each(data, function (key, row) {
+            var csvRow = [];
 
-    return csvString;
+            $.each(row, function (key, data) {
+                csvRow.push(window.encodeURI(data));
+            });
+
+            csvRows.push(csvRow.join(','));
+        });
+
+        csvString = csvRows.join("%0A");
+
+        return csvString;
+    } else {
+        return '';
+    }
 }
 
 function renderColumnSelection(actions)
