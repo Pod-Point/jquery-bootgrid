@@ -366,7 +366,7 @@ function renderActions()
                             e.stopPropagation();
 
                             var $this = $(this);
-                            $this.attr('disabled','disabled');
+                            $this.attr('disabled', 'disabled');
 
                             $.get(that.options.url, function(data) {
                                 var csv = buildCsvString(data.rows);
@@ -384,11 +384,6 @@ function renderActions()
                                 window.alert('Something went wrong while trying to download this data grid.');
                             });
                         });
-
-                if (this.total === 0) {
-                    download.attr('disabled','disabled');
-                }
-
                 actions.append(download);
             }
 

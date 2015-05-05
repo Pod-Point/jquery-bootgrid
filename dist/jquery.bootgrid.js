@@ -365,6 +365,8 @@ function renderActions()
                 tpl = this.options.templates,
                 actions = $(tpl.actions.resolve(getParams.call(this)));
 
+            console.log(that.currentRows);
+
             // Download Button (only works if browser has HTML 5 download attr available and download option set)
             if (this.options.ajax && this.options.download && (!window.externalHost && 'download' in document.createElement('a')))
             {
@@ -376,7 +378,7 @@ function renderActions()
                             e.stopPropagation();
 
                             var $this = $(this);
-                            $this.attr('disabled','disabled');
+                            $this.attr('disabled', 'disabled');
 
                             $.get(that.options.url, function(data) {
                                 var csv = buildCsvString(data.rows);
@@ -394,11 +396,6 @@ function renderActions()
                                 window.alert('Something went wrong while trying to download this data grid.');
                             });
                         });
-
-                if (this.total === 0) {
-                    download.attr('disabled','disabled');
-                }
-
                 actions.append(download);
             }
 
