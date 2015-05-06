@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 05/05/2015
+ * jQuery Bootgrid v1.1.4 - 05/06/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -76,6 +76,7 @@ function init()
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
     renderTableHeader.call(this);
+    renderTableFooter.call(this);
     renderSearchField.call(this);
     renderActions.call(this);
     loadData.call(this);
@@ -155,6 +156,8 @@ function loadColumns()
                 identifier: that.identifier == null && data.identifier || false,
                 converter: that.options.converters[data.converter || data.type] || that.options.converters["string"],
                 text: $this.text(),
+                footer: data.footer || "",
+                footerClass: data.footerClass || 'text-muted small',
                 align: data.align || "left",
                 headerAlign: data.headerAlign || "left",
                 cssClass: data.cssClass || "",
@@ -491,6 +494,7 @@ function renderColumnSelection(actions)
                             that.element.find("tbody").empty(); // Fixes an column visualization bug
                             renderTableHeader.call(that);
                             loadData.call(that);
+                            renderTableFooter.call(that);
                         }
                     });
             dropDown.find(getCssSelector(css.dropDownMenuItems)).append(item);
@@ -994,6 +998,43 @@ function renderTableHeader()
     }
 }
 
+function renderTableFooter()
+{
+    var that = this,
+        footerRow = this.element.find('tfoot > tr'),
+        tpl = this.options.templates,
+        html = '';
+
+    // Generate HTML for each cell.
+    $.each(this.columns, function (index, column) {
+        if (column.visible) {
+            html += tpl.cell.resolve(getParams.call(that, {
+                content: column.footer,
+                css:     column.footerClass
+            }));
+        }
+    });
+
+    // Generate row for table cells.
+    html = tpl.row.resolve(getParams.call(that, {
+        attr:  '',
+        cells: html
+    }));
+
+    if (footerRow.length === 0) {
+        // Generate table footer.
+        html = tpl.tableFooter.resolve(getParams.call(that, {
+            attr: '',
+            row:  html
+        }));
+
+        this.element.append(html);
+    } else {
+        // Replace current table footer.
+        this.element.find('tfoot').html(html);
+    }
+}
+
 function setTableHeaderSortDirection(instance)
 {
     var $this = $(this),
@@ -1428,7 +1469,8 @@ Grid.defaults = {
         rawHeaderCell: "<th class=\"{{ctx.css}}\">{{ctx.content}}</th>", // Used for the multi select box
         row: "<tr{{ctx.attr}}>{{ctx.cells}}</tr>",
         search: "<div class=\"{{css.search}}\"><div class=\"input-group\"><span class=\"{{css.icon}} input-group-addon glyphicon-search\"></span> <input type=\"text\" value=\"{{ctx.searchPhrase}}\" class=\"{{css.searchField}}\" placeholder=\"{{lbl.search}}\" /></div></div>",
-        select: "<input name=\"select\" type=\"{{ctx.type}}\" class=\"{{css.selectBox}}\" value=\"{{ctx.value}}\" {{ctx.checked}} />"
+        select: "<input name=\"select\" type=\"{{ctx.type}}\" class=\"{{css.selectBox}}\" value=\"{{ctx.value}}\" {{ctx.checked}} />",
+        tableFooter: "<tfoot{{ctx.attr}}>{{ctx.row}}</tfoot>"
     }
 };
 

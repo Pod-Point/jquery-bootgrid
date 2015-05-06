@@ -66,6 +66,7 @@ function init()
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
     renderTableHeader.call(this);
+    renderTableFooter.call(this);
     renderSearchField.call(this);
     renderActions.call(this);
     loadData.call(this);
@@ -145,6 +146,8 @@ function loadColumns()
                 identifier: that.identifier == null && data.identifier || false,
                 converter: that.options.converters[data.converter || data.type] || that.options.converters["string"],
                 text: $this.text(),
+                footer: data.footer || "",
+                footerClass: data.footerClass || 'text-muted small',
                 align: data.align || "left",
                 headerAlign: data.headerAlign || "left",
                 cssClass: data.cssClass || "",
@@ -481,6 +484,7 @@ function renderColumnSelection(actions)
                             that.element.find("tbody").empty(); // Fixes an column visualization bug
                             renderTableHeader.call(that);
                             loadData.call(that);
+                            renderTableFooter.call(that);
                         }
                     });
             dropDown.find(getCssSelector(css.dropDownMenuItems)).append(item);
@@ -981,6 +985,42 @@ function renderTableHeader()
                     that.deselect();
                 }
             });
+    }
+}
+
+function renderTableFooter()
+{
+    var that = this,
+        footerRow = this.element.find('tfoot > tr'),
+        tpl = this.options.templates,
+        html = '';
+
+    // Generate HTML for each cell.
+    $.each(this.columns, function (index, column) {
+        if (column.visible) {
+            html += tpl.cell.resolve(getParams.call(that, {
+                content: column.footer,
+                css:     column.footerClass
+            }));
+        }
+    });
+
+    // Generate row for table cells.
+    html = tpl.row.resolve(getParams.call(that, {
+        attr:  '',
+        cells: html
+    }));
+
+    if (footerRow.length === 0) {
+        // Generate table footer.
+        html = tpl.tableFooter.resolve(getParams.call(that, {
+            attr: '',
+            row:  html
+        }));
+        this.element.append(html);
+    } else {
+        // Replace current table footer.
+        this.element.find('tfoot').html(html);
     }
 }
 

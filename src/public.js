@@ -310,7 +310,8 @@ Grid.defaults = {
         rawHeaderCell: "<th class=\"{{ctx.css}}\">{{ctx.content}}</th>", // Used for the multi select box
         row: "<tr{{ctx.attr}}>{{ctx.cells}}</tr>",
         search: "<div class=\"{{css.search}}\"><div class=\"input-group\"><span class=\"{{css.icon}} input-group-addon glyphicon-search\"></span> <input type=\"text\" value=\"{{ctx.searchPhrase}}\" class=\"{{css.searchField}}\" placeholder=\"{{lbl.search}}\" /></div></div>",
-        select: "<input name=\"select\" type=\"{{ctx.type}}\" class=\"{{css.selectBox}}\" value=\"{{ctx.value}}\" {{ctx.checked}} />"
+        select: "<input name=\"select\" type=\"{{ctx.type}}\" class=\"{{css.selectBox}}\" value=\"{{ctx.value}}\" {{ctx.checked}} />",
+        tableFooter: "<tfoot{{ctx.attr}}>{{ctx.row}}</tfoot>"
     }
 };
 
