@@ -28,6 +28,7 @@ var Grid = function(element, options)
     this.searchPhrase = "";
     this.selectedRows = [];
     this.sortDictionary = {};
+    this.firstSortDictionary = {};
     this.total = 0;
     this.totalPages = 0;
     this.cachedParams = {

@@ -166,12 +166,18 @@ function loadColumns()
                 order: (!sorted && (data.order === "asc" || data.order === "desc")) ? data.order : null,
                 searchable: !(data.searchable === false), // default: true
                 sortable: !(data.sortable === false), // default: true
-                visible: !(data.visible === false) // default: true
+                visible: !(data.visible === false), // default: true
+                firstOrder: data.firstOrder || "asc"
             };
         that.columns.push(column);
         if (column.order != null)
         {
             that.sortDictionary[column.id] = column.order;
+        }
+
+        if(column.firstOrder != null)
+        {
+            that.firstSortDictionary[column.id] = column.firstOrder;
         }
 
         // Prevents multiple identifiers
@@ -1040,7 +1046,7 @@ function setTableHeaderSortDirection(instance)
         css = instance.options.css,
         iconSelector = getCssSelector(css.icon),
         columnId = $this.data("column-id") || $this.parents("th").first().data("column-id"),
-        sortOrder = instance.sortDictionary[columnId],
+        sortOrder = instance.sortDictionary[columnId] || instance.firstSortDictionary[columnId],
         icon = $this.find(iconSelector);
 
     if (!instance.options.multiSort)
@@ -1186,6 +1192,7 @@ var Grid = function(element, options)
     this.searchPhrase = "";
     this.selectedRows = [];
     this.sortDictionary = {};
+    this.firstSortDictionary = {};
     this.total = 0;
     this.totalPages = 0;
     this.cachedParams = {
