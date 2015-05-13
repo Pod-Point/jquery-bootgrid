@@ -167,7 +167,11 @@ function loadColumns()
 
         if(column.firstOrder != null)
         {
-            that.firstSortDictionary[column.id] = column.firstOrder;
+            if (column.firstOrder === 'asc') {
+                that.firstSortDictionary[column.id] = 'desc';
+            } else {
+                that.firstSortDictionary[column.id] = 'asc';
+            }
         }
 
         // Prevents multiple identifiers
