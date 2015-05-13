@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 05/06/2015
+ * jQuery Bootgrid v1.1.4 - 05/13/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -1027,7 +1027,6 @@ function renderTableFooter()
             attr: '',
             row:  html
         }));
-
         this.element.append(html);
     } else {
         // Replace current table footer.
@@ -1439,7 +1438,8 @@ Grid.defaults = {
         loading: "Loading...",
         noResults: "No results found!",
         refresh: "Refresh",
-        search: "Search"
+        search: "Search",
+        download: "Download CSV"
     },
 
     /**

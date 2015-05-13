@@ -280,7 +280,8 @@ Grid.defaults = {
         loading: "Loading...",
         noResults: "No results found!",
         refresh: "Refresh",
-        search: "Search"
+        search: "Search",
+        download: "Download CSV"
     },
 
     /**
