@@ -437,7 +437,7 @@ function buildCsvString(data)
     if (data.length > 0) {
         // Grab the column headings
         $.each(data[0], function (key) {
-            csvHeadings.push(window.encodeURI(key));
+            csvHeadings.push(window.encodeURI('"' + key + '"'));
         });
 
         csvRows.push(csvHeadings.join(','));
@@ -447,7 +447,7 @@ function buildCsvString(data)
             var csvRow = [];
 
             $.each(row, function (key, data) {
-                csvRow.push(window.encodeURI(data));
+                csvRow.push(window.encodeURI('"' + data + '"'));
             });
 
             csvRows.push(csvRow.join(','));

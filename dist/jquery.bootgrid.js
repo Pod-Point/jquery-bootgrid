@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 05/13/2015
+ * jQuery Bootgrid v1.1.4 - 05/15/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -447,7 +447,7 @@ function buildCsvString(data)
     if (data.length > 0) {
         // Grab the column headings
         $.each(data[0], function (key) {
-            csvHeadings.push(window.encodeURI(key));
+            csvHeadings.push(window.encodeURI('"' + key + '"'));
         });
 
         csvRows.push(csvHeadings.join(','));
@@ -457,7 +457,7 @@ function buildCsvString(data)
             var csvRow = [];
 
             $.each(row, function (key, data) {
-                csvRow.push(window.encodeURI(data));
+                csvRow.push(window.encodeURI('"' + data + '"'));
             });
 
             csvRows.push(csvRow.join(','));
