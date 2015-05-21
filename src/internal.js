@@ -65,11 +65,9 @@ function init()
     this.selection = this.options.selection && this.identifier != null;
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
+    loadData.call(this);
     renderTableHeader.call(this);
     renderTableFooter.call(this);
-    renderSearchField.call(this);
-    renderActions.call(this);
-    loadData.call(this);
     replaceHistoryState.call(this);
 
     var bootgrid = this;
@@ -243,6 +241,8 @@ function loadData()
             that.selectedRows = [];
         }
 
+        renderSearchField.call(that);
+        renderActions.call(that);
         renderRows.call(that, rows);
         renderInfos.call(that);
         renderPagination.call(that);
@@ -368,9 +368,15 @@ function renderActions()
                 tpl = this.options.templates,
                 actions = $(tpl.actions.resolve(getParams.call(this)));
 
-            // Download Button (only works if browser has HTML 5 download attr available and download option set)
-            if (this.options.ajax && this.options.download && (!window.externalHost && 'download' in document.createElement('a')))
-            {
+            // Download Button (client side only works if browser has HTML 5 download attr available and download option
+            // set). This button is disabled if more than 1000 rows exist in the datagrid and no server side download
+            // endpoint is available.
+            if (
+                this.options.ajax &&
+                this.options.download &&
+                (!window.externalHost && 'download' in document.createElement('a')) &&
+                (this.total < 1000 || typeof that.options.download === 'object')
+            ) {
                 var downloadIcon = tpl.icon.resolve(getParams.call(this, { iconCss: css.iconDownload })),
                     download = $(tpl.actionButton.resolve(getParams.call(this,
                         { content: downloadIcon, text: this.options.labels.download })))
@@ -381,16 +387,14 @@ function renderActions()
                             var $this = $(this);
                             $this.attr('disabled', 'disabled');
 
-                            $.get(that.options.url, function(data) {
-                                var csv = buildCsvString(data.rows);
-
-                                var a      = document.createElement('a');
-                                a.href     = 'data:attachment/csv,' + csv;
-                                a.target   = '_blank';
-                                a.download = that.options.download;
-
-                                document.body.appendChild(a);
-                                a.click();
+                            $.get(that.options.download.url || that.options.url, function(data) {
+                                if(typeof that.options.download === 'string') {
+                                    generateCsvUsingJson.call(that, data);
+                                } else if (typeof that.options.download === 'object') {
+                                    if (typeof that.options.download.callback === 'function') {
+                                        that.options.download.callback.call(that, data);
+                                    }
+                                }
                             }).always(function() {
                                 $this.removeAttr('disabled');
                             }).fail(function() {
@@ -426,6 +430,20 @@ function renderActions()
             replacePlaceHolder.call(this, footerActions, actions, 2);
         }
     }
+}
+
+function generateCsvUsingJson(data)
+{
+    var csv = buildCsvString(data.rows);
+
+    var a      = document.createElement('a');
+    a.href     = 'data:attachment/csv,' + csv;
+    a.target   = '_blank';
+    a.download = this.options.download;
+
+    document.body.appendChild(a);
+
+    a.click();
 }
 
 function buildCsvString(data)
