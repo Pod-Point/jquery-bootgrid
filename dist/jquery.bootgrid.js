@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 05/21/2015
+ * jQuery Bootgrid v1.1.4 - 05/27/2015
  * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -75,6 +75,7 @@ function init()
     this.selection = this.options.selection && this.identifier != null;
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
+    renderSearchField.call(this);
     loadData.call(this);
     renderTableHeader.call(this);
     renderTableFooter.call(this);
@@ -251,7 +252,6 @@ function loadData()
             that.selectedRows = [];
         }
 
-        renderSearchField.call(that);
         renderActions.call(that);
         renderRows.call(that, rows);
         renderInfos.call(that);

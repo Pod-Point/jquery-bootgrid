@@ -65,6 +65,7 @@ function init()
     this.selection = this.options.selection && this.identifier != null;
     loadRows.call(this); // Loads rows from HTML tbody tag if ajax is false
     prepareTable.call(this);
+    renderSearchField.call(this);
     loadData.call(this);
     renderTableHeader.call(this);
     renderTableFooter.call(this);
@@ -241,7 +242,6 @@ function loadData()
             that.selectedRows = [];
         }
 
-        renderSearchField.call(that);
         renderActions.call(that);
         renderRows.call(that, rows);
         renderInfos.call(that);
