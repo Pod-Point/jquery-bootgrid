@@ -387,19 +387,26 @@ function renderActions()
                             var $this = $(this);
                             $this.attr('disabled', 'disabled');
 
-                            $.get(that.options.download.url || that.options.url, function(data) {
-                                if(typeof that.options.download === 'string') {
-                                    generateCsvUsingJson.call(that, data);
-                                } else if (typeof that.options.download === 'object') {
-                                    if (typeof that.options.download.callback === 'function') {
-                                        that.options.download.callback.call(that, data);
-                                    }
-                                }
-                            }).always(function() {
+                            if (that.options.download.direct === true) {
+                                // A direct download has been requested - open in new window/tab.
+                                window.open(that.options.download.url, '_blank');
                                 $this.removeAttr('disabled');
-                            }).fail(function() {
-                                window.alert('Something went wrong while trying to download this data grid.');
-                            });
+                            } else {
+                                // An AJAX download has been requested - run request.
+                                $.get(that.options.download.url || that.options.url, function(data) {
+                                    if(typeof that.options.download === 'string') {
+                                        generateCsvUsingJson.call(that, data);
+                                    } else if (typeof that.options.download === 'object') {
+                                        if (typeof that.options.download.callback === 'function') {
+                                            that.options.download.callback.call(that, data);
+                                        }
+                                    }
+                                }).always(function() {
+                                    $this.removeAttr('disabled');
+                                }).fail(function() {
+                                    window.alert('Something went wrong while trying to download this data grid.');
+                                });
+                            }
                         });
                 actions.append(download);
             }
