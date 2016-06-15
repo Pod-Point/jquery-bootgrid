@@ -374,7 +374,7 @@ function renderActions()
             if (
                 this.options.ajax &&
                 this.options.download &&
-                (!window.externalHost && 'download' in document.createElement('a')) &&
+                (!window.externalHost) &&
                 (this.total < 1000 || typeof that.options.download === 'object')
             ) {
                 var downloadIcon = tpl.icon.resolve(getParams.call(this, { iconCss: css.iconDownload })),
