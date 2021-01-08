@@ -68,14 +68,14 @@ function getUrl()
 function getDownloadUrl()
 {
     var params = {
-        current: this.current ?? 1,
-        searchPhrase: this.searchPhrase ?? '',
-        rowCount: this.rowCount ?? 10,
+        current: this.current,
+        searchPhrase: this.searchPhrase,
+        rowCount: this.rowCount,
     };
 
     var sort = {};
 
-    Object.keys(this.sortDictionary).forEach(key => {
+    Object.keys(this.sortDictionary).forEach(function (key){
         sort[key] = this.sortDictionary[key];
     });
 
