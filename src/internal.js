@@ -55,6 +55,25 @@ function getUrl()
     return ($.isFunction(url)) ? url() : url;
 }
 
+function getDownloadUrl()
+{
+    var params = {
+        current: this.current ?? 1,
+        searchPhrase: this.searchPhrase ?? '',
+        rowCount: this.rowCount ?? 10,
+    };
+
+    var sort = {};
+
+    Object.keys(this.sortDictionary).forEach(key => {
+        sort[key] = this.sortDictionary[key];
+    });
+
+    params['sort'] = sort;
+
+    return this.options.download.url + '?' + $.param(params);
+}
+
 function init()
 {
     this.element.trigger("initialize" + namespace);
@@ -389,7 +408,7 @@ function renderActions()
 
                             if (that.options.download.direct === true) {
                                 // A direct download has been requested - open in new window/tab.
-                                window.open(that.options.download.url, '_blank');
+                                window.open(getDownloadUrl.call(that), '_blank');
                                 $this.removeAttr('disabled');
                             } else {
                                 // An AJAX download has been requested - run request.
