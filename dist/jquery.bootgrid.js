@@ -1,6 +1,6 @@
-/*!
- * jQuery Bootgrid v1.1.4 - 06/08/2015
- * Copyright (c) 2015 Rafael Staib (http://www.jquery-bootgrid.com)
+/*! 
+ * jQuery Bootgrid v1.1.4 - 01/08/2021
+ * Copyright (c) 2021 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
 ;(function ($, window, undefined)
@@ -63,6 +63,25 @@ function getUrl()
 {
     var url = this.options.url;
     return ($.isFunction(url)) ? url() : url;
+}
+
+function getDownloadUrl()
+{
+    var params = {
+        current: this.current,
+        searchPhrase: this.searchPhrase,
+        rowCount: this.rowCount,
+    };
+
+    var sort = {};
+
+    Object.keys(this.sortDictionary).forEach(function (key){
+        sort[key] = this.sortDictionary[key];
+    });
+
+    params['sort'] = sort;
+
+    return this.options.download.url + '?' + $.param(params);
 }
 
 function init()
@@ -399,7 +418,7 @@ function renderActions()
 
                             if (that.options.download.direct === true) {
                                 // A direct download has been requested - open in new window/tab.
-                                window.open(that.options.download.url, '_blank');
+                                window.open(getDownloadUrl.call(that), '_blank');
                                 $this.removeAttr('disabled');
                             } else {
                                 // An AJAX download has been requested - run request.
@@ -1836,8 +1855,8 @@ $.fn.extend({
 
     _bgBusyAria: function(busy)
     {
-        return (busy == null || busy) ?
-            this._bgAria("busy", "true") :
+        return (busy == null || busy) ? 
+            this._bgAria("busy", "true") : 
             this._bgAria("busy", "false");
     },
 
@@ -1848,29 +1867,29 @@ $.fn.extend({
 
     _bgEnableAria: function (enable)
     {
-        return (enable == null || enable) ?
-            this.removeClass("disabled")._bgAria("disabled", "false") :
+        return (enable == null || enable) ? 
+            this.removeClass("disabled")._bgAria("disabled", "false") : 
             this.addClass("disabled")._bgAria("disabled", "true");
     },
 
     _bgEnableField: function (enable)
     {
-        return (enable == null || enable) ?
-            this.removeAttr("disabled") :
+        return (enable == null || enable) ? 
+            this.removeAttr("disabled") : 
             this.attr("disabled", "disable");
     },
 
     _bgShowAria: function (show)
     {
-        return (show == null || show) ?
+        return (show == null || show) ? 
             this.show()._bgAria("hidden", "false") :
             this.hide()._bgAria("hidden", "true");
     },
 
     _bgSelectAria: function (select)
     {
-        return (select == null || select) ?
-            this.addClass("active")._bgAria("selected", "true") :
+        return (select == null || select) ? 
+            this.addClass("active")._bgAria("selected", "true") : 
             this.removeClass("active")._bgAria("selected", "false");
     },
 
@@ -1960,8 +1979,8 @@ if (!Array.prototype.page)
     {
         var skip = (page - 1) * size,
             end = skip + size;
-        return (this.length > skip) ?
-            (this.length > end) ? this.slice(skip, end) :
+        return (this.length > skip) ? 
+            (this.length > end) ? this.slice(skip, end) : 
                 this.slice(skip) : [];
     };
 }

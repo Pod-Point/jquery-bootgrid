@@ -12,7 +12,7 @@
     },
     "bugs": "https://github.com/rstaib/jquery-bootgrid/issues",
     "scripts": {
-        "test": "grunt"
+        "test": "grunt --force"
     },
     "repository": {
         "type": "git",
@@ -35,7 +35,10 @@
         "Accessibility"
     ],
     "licenses": [
-        { "type": "MIT", "url": "http://www.opensource.org/licenses/MIT" }
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/MIT"
+        }
     ],
     "dependencies": {
         "jquery": ">=1.9.0",
