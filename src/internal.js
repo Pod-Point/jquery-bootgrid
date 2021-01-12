@@ -65,8 +65,10 @@ function getDownloadUrl()
 
     var sort = {};
 
+    var that = this;
+
     Object.keys(this.sortDictionary).forEach(function (key){
-        sort[key] = this.sortDictionary[key];
+        sort[key] = that.sortDictionary[key];
     });
 
     params['sort'] = sort;

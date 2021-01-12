@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 01/08/2021
+ * jQuery Bootgrid v1.1.4 - 01/12/2021
  * Copyright (c) 2021 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -75,8 +75,10 @@ function getDownloadUrl()
 
     var sort = {};
 
+    var that = this;
+
     Object.keys(this.sortDictionary).forEach(function (key){
-        sort[key] = this.sortDictionary[key];
+        sort[key] = that.sortDictionary[key];
     });
 
     params['sort'] = sort;
