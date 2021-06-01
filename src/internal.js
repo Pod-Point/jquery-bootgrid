@@ -953,11 +953,14 @@ function renderSearchField()
                 if (currentValue !== newValue)
                 {
                     currentValue = newValue;
-                    window.clearTimeout(timer);
-                    timer = window.setTimeout(function ()
+                    if (newValue.length === 0 || newValue.length >= that.options.searchSettings.characters)
                     {
-                        that.search(newValue);
-                    }, 250);
+                        window.clearTimeout(timer);
+                        timer = window.setTimeout(function ()
+                        {
+                            that.search(newValue);
+                        }, that.options.searchSettings.delay);
+                    }
                 }
             });
 

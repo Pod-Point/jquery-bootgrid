@@ -118,6 +118,35 @@ Grid.defaults = {
                     //      'url' and 'request' passed together to requestHandler perhaps.
 
     /**
+     * General search settings to configure the search field behaviour.
+     *
+     * @property searchSettings
+     * @type Object
+     * @for defaults
+     **/
+    searchSettings: {
+        /**
+         * The time in milliseconds to wait before search gets executed.
+         *
+         * @property delay
+         * @type Number
+         * @default 250
+         * @for searchSettings
+         **/
+        delay: 250,
+
+        /**
+         * The characters to type before the search gets executed.
+         *
+         * @property characters
+         * @type Number
+         * @default 1
+         * @for searchSettings
+         **/
+        characters: 1
+    },
+
+    /**
      * Enriches the request object with additional properties. Either a `PlainObject` or a `Function`
      * that returns a `PlainObject` can be passed. Default value is `{}`.
      *
