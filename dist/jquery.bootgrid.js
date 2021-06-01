@@ -1,5 +1,5 @@
 /*! 
- * jQuery Bootgrid v1.1.4 - 01/12/2021
+ * jQuery Bootgrid v1.1.4 - 06/01/2021
  * Copyright (c) 2021 Rafael Staib (http://www.jquery-bootgrid.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -960,14 +960,17 @@ function renderSearchField()
             {
                 e.stopPropagation();
                 var newValue = $(this).val();
-                if (currentValue !== newValue)
+                if (currentValue !== newValue || (e.which === 13 && newValue !== ""))
                 {
                     currentValue = newValue;
-                    window.clearTimeout(timer);
-                    timer = window.setTimeout(function ()
+                    if (e.which === 13 || newValue.length === 0 || newValue.length >= that.options.searchSettings.characters)
                     {
-                        that.search(newValue);
-                    }, 250);
+                        window.clearTimeout(timer);
+                        timer = window.setTimeout(function ()
+                        {
+                            that.search(newValue);
+                        }, that.options.searchSettings.delay);
+                    }
                 }
             });
 
@@ -1330,6 +1333,35 @@ Grid.defaults = {
     ajax: false, // todo: find a better name for this property to differentiate between client-side and server-side data
     method: "GET",  //todo: user control over url- /rest/like/paths instead of query string for instance.
                     //      'url' and 'request' passed together to requestHandler perhaps.
+
+    /**
+     * General search settings to configure the search field behaviour.
+     *
+     * @property searchSettings
+     * @type Object
+     * @for defaults
+     **/
+    searchSettings: {
+        /**
+         * The time in milliseconds to wait before search gets executed.
+         *
+         * @property delay
+         * @type Number
+         * @default 250
+         * @for searchSettings
+         **/
+        delay: 250,
+
+        /**
+         * The characters to type before the search gets executed.
+         *
+         * @property characters
+         * @type Number
+         * @default 1
+         * @for searchSettings
+         **/
+        characters: 1
+    },
 
     /**
      * Enriches the request object with additional properties. Either a `PlainObject` or a `Function`

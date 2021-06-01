@@ -950,14 +950,17 @@ function renderSearchField()
             {
                 e.stopPropagation();
                 var newValue = $(this).val();
-                if (currentValue !== newValue)
+                if (currentValue !== newValue || (e.which === 13 && newValue !== ""))
                 {
                     currentValue = newValue;
-                    window.clearTimeout(timer);
-                    timer = window.setTimeout(function ()
+                    if (e.which === 13 || newValue.length === 0 || newValue.length >= that.options.searchSettings.characters)
                     {
-                        that.search(newValue);
-                    }, 250);
+                        window.clearTimeout(timer);
+                        timer = window.setTimeout(function ()
+                        {
+                            that.search(newValue);
+                        }, that.options.searchSettings.delay);
+                    }
                 }
             });
 
